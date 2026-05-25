@@ -367,8 +367,16 @@ if($items && is_array($items)) {
     foreach($folders as $folder) {
         $fullpath = $path . '/' . $folder;
         $perm = perms($fullpath);
-        $date = filedate($fullpath);
-        $owner_name = owner($fullpath);
+        // $date = filedate($fullpath);
+        $date = @filedate($fullpath);
+        if(!$date){
+            $date = '-';
+        }
+        // $owner_name = owner($fullpath);
+        $owner_name = @owner($fullpath);
+        if(!$owner_name){
+            $owner_name = '-';
+        }
         
         $renameId = 'renameFolder_' . md5($fullpath);
         $chmodId = 'chmodFolder_' . md5($fullpath);
@@ -427,7 +435,11 @@ if($items && is_array($items)) {
     }
     foreach($files as $file) {
         $fullpath = $path . '/' . $file;
-        $size = $y($fullpath);
+        // $size = $y($fullpath);
+        $size = @$y($fullpath);
+        if($size === false){
+            $size = 0;
+        }
         if($size >= 1048576){
             $size_display = round($size/1048576,2).' MB';
         } elseif($size >= 1024){
@@ -436,8 +448,16 @@ if($items && is_array($items)) {
             $size_display = $size.' B';
         }
         $perm = perms($fullpath);
-        $date = filedate($fullpath);
-        $owner_name = owner($fullpath);
+        // $date = filedate($fullpath);
+        $date = @filedate($fullpath);
+        if(!$date){
+            $date = '-';
+        }
+        // $owner_name = owner($fullpath);
+        $owner_name = @owner($fullpath);
+        if(!$owner_name){
+            $owner_name = '-';
+        }
         $editId = 'editFile_' . md5($fullpath);
         $renameId = 'renameFile_' . md5($fullpath);
         $chmodId = 'chmodFile_' . md5($fullpath);
@@ -451,7 +471,23 @@ if($items && is_array($items)) {
             $perm_color = '#ffffff';
         }
         
-        $content = is_readable($fullpath) ? htmlspecialchars($ae($fullpath)) : '';
+        // $content = is_readable($fullpath) ? htmlspecialchars($ae($fullpath)) : '';
+        $content = '';
+        if(
+            is_file($fullpath) &&
+            is_readable($fullpath) &&
+            filesize($fullpath) < 1024 * 1024
+        ){
+            $raw = @$ae($fullpath);
+
+            if($raw !== false){
+                if(mb_detect_encoding($raw, 'UTF-8, ASCII', true)){
+                    $content = htmlspecialchars($raw);
+                } else {
+                    $content = '[BINARY FILE]';
+                }
+            }
+        }
         echo '<tr>';
         echo '<td><i class="fa fa-file" style="color: #d6d4ce"></i> <span class="file-link" onclick="openModal(\'' . $editId . '\')">' . htmlspecialchars($file) . '</span></td>';
         echo '<td style="text-align:center">' . $size_display . '</td>';
