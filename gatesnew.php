@@ -91,7 +91,7 @@ function ekse($coman, $serlok) {
     );
     $process = @proc_open($komen, $descriptorspec, $pipes, $serlok);
     if (!is_resource($process)) {
-        echo "Failed execute";
+        echo "Failed";
         return;
     }
     fclose($pipes[0]);
